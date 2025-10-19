@@ -6,12 +6,18 @@ import { createClient } from "@/utils/supabase/server";
 export async function logout() {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signOut();
+  try {
+    const { error } = await supabase.auth.signOut();
 
-  if (error) {
+    if (error && error.message !== "No active session") {
+      console.error("Supabase logout error:", error.message);
+      redirect("/error");
+    }
+  } catch (err) {
+    console.error("Unexpected logout error:", err);
     redirect("/error");
   }
 
-  revalidatePath("/login", "layout");
-  redirect("//login");
+  revalidatePath("/login");
+  redirect("/login");
 }
