@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { uploadSubmission } from "@/services/submissionsService";
+import ModerationProgress from "@/components/ModerationProgress/ModerationProgress";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function UploadPage() {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [isModerating, setIsModerating] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -60,26 +63,41 @@ export default function UploadPage() {
     setIsLoading(true);
 
     try {
-      await uploadSubmission({
+      const result = await uploadSubmission({
         type: image ? "image" : "text",
         content: content.trim(),
         image,
       });
 
-      showSuccess("Upload successful!");
-      router.push("/");
-    } catch (error: any) {
-      showError(
-        error.response?.data?.message || "Upload failed. Please try again."
-      );
+      showSuccess("Upload successful! Moderating your content...");
+      setSubmissionId(result.id);
+      setIsModerating(true);
       setContent("");
       setImage(null);
       setPreview(null);
       setType("text");
+    } catch (error: any) {
+      showError(
+        error.response?.data?.message || "Upload failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleModerationComplete = () => {
+    setIsModerating(false);
+    router.push("/");
+  };
+
+  if (isModerating && submissionId) {
+    return (
+      <ModerationProgress
+        submissionId={submissionId}
+        onComplete={handleModerationComplete}
+      />
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen p-5">
@@ -98,13 +116,15 @@ export default function UploadPage() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="bg-background outline-0 rounded-lg p-3 w-full resize-none min-h-[100px]"
+          disabled={isLoading}
         />
 
         <div className="w-full flex flex-col gap-2">
           <button
             type="button"
             onClick={handleBrowseClick}
-            className={`w-full p-3 rounded-lg cursor-pointer transition-colors duration-150 
+            disabled={isLoading}
+            className={`w-full p-3 rounded-lg cursor-pointer transition-colors duration-150 disabled:opacity-50
               ${
                 image
                   ? "bg-green-600 hover:bg-green-700"
@@ -120,6 +140,7 @@ export default function UploadPage() {
             accept="image/*"
             onChange={handleImageChange}
             className="hidden"
+            disabled={isLoading}
           />
           {image && (
             <p className="text-sm text-gray-400 truncate text-center">

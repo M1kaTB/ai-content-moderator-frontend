@@ -9,7 +9,7 @@ export default function ToxicityTag({ percentage }: ToxicityTagProps) {
 
   return (
     <span className={`px-3 py-1 rounded-full text-sm font-medium ${color}`}>
-      Toxicity: {percentage}%
+      Toxicity: {percentage.toFixed(0)}%
     </span>
   );
 }

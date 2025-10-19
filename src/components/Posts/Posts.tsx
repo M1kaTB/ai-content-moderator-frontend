@@ -12,12 +12,16 @@ export interface Post {
     id: string;
   };
   content: string;
-  uploaded: "approved" | "flagged" | "rejected";
+  status: "pending" | "approved" | "flagged" | "rejected";
+  moderation_stage?: string;
   toxicity: number;
   nsfw_content: boolean;
   violence: boolean;
+  image_replaced_by_ai?: boolean;
   uploaddate: string;
   imageUrl?: string;
+  summary?: string;
+  reasoning?: string;
 }
 
 interface PostsProps {
@@ -48,16 +52,26 @@ export default function Posts({ type }: PostsProps) {
 
   return (
     <div className="w-[90%] mx-auto flex flex-wrap justify-around gap-6">
+      {!loading && posts?.length === 0 && (
+        <div className="w-full text-center py-10">
+          <p className="text-gray-500 text-lg">No submissions found</p>
+        </div>
+      )}
       {posts?.map((p) => (
         <Post
           key={p.id}
+          id={p.id}
           content={p.content}
           image={p.imageUrl}
-          uploaded={p.uploaded}
+          status={p.status ?? "approved"}
+          moderation_stage={p.moderation_stage}
           toxicity={p.toxicity * 100}
           nsfw_content={p.nsfw_content}
           violence={p.violence}
+          image_replaced_by_ai={p.image_replaced_by_ai}
           timestamp={p.uploaddate}
+          summary={p.summary}
+          reasoning={p.reasoning}
         />
       ))}
     </div>
