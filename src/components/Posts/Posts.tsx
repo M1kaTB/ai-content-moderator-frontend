@@ -51,16 +51,15 @@ export default function Posts({ type }: PostsProps) {
   }, [type]);
 
   return (
-    <div className="w-[90%] mx-auto flex flex-wrap justify-around gap-6">
+    <div className="max-w-[780px] w-[100%] mx-auto flex flex-wrap justify-around gap-6">
       {!loading && posts?.length === 0 && (
         <div className="w-full text-center py-10">
-          <p className="text-gray-500 text-lg">No submissions found</p>
+          <p className="text-gray-500 text-lg">No submissions found :(</p>
         </div>
       )}
       {posts?.map((p) => (
         <Post
           key={p.id}
-          id={p.id}
           content={p.content}
           image={p.imageUrl}
           status={p.status ?? "approved"}

@@ -10,7 +10,7 @@ export default function Home() {
     "yourUploads"
   );
   return (
-    <div className="font-sans items-center justify-items-center min-h-screen pt-16 pb-20 px-8 sm:pt-6 sm:px-20">
+    <div className="font-sans items-center justify-items-center min-h-screen pt-16 pb-20 px-8 md:pt-6 sm:px-20">
       <Logout />
       <Header chosenOption={option} onOptionChange={setOption} />
       <div className="w-[100%] mt-24">

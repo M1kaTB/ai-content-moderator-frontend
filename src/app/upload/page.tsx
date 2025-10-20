@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { uploadSubmission } from "@/services/submissionsService";
-import ModerationProgress from "@/components/ModerationProgress/ModerationProgress";
+import ModerationProgress from "@/components/Moderation/ModerationProgress";
+import axios, { AxiosError } from "axios";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -76,10 +77,14 @@ export default function UploadPage() {
       setImage(null);
       setPreview(null);
       setType("text");
-    } catch (error: any) {
-      showError(
-        error.response?.data?.message || "Upload failed. Please try again."
-      );
+    } catch (error) {
+      let message = "Upload failed. Please try again.";
+
+      if (axios.isAxiosError(error)) {
+        message = (error.response?.data as AxiosError)?.message || message;
+      }
+
+      showError(message);
     } finally {
       setIsLoading(false);
     }

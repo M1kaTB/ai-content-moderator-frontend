@@ -5,7 +5,6 @@ import ImageReplacedTag from "./Tags/ImageReplacedTag";
 import ModerationStageTag from "./Tags/ModerationStageTag";
 
 export type PostProps = {
-  id: string;
   content: string;
   image?: string;
   status: "pending" | "approved" | "flagged" | "rejected";
@@ -20,7 +19,6 @@ export type PostProps = {
 };
 
 export default function Post({
-  id,
   content,
   image,
   status,
@@ -33,6 +31,15 @@ export default function Post({
   summary,
   reasoning,
 }: PostProps) {
+  const formattedTimestamp = new Date(timestamp).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
   return (
     <div className="max-w-[600px] w-full bg-secondary-color border border-secondary-color-hovered rounded-2xl shadow-sm p-4 space-y-3">
       <div className="flex items-center justify-between">
@@ -41,7 +48,7 @@ export default function Post({
             <p className="font-semibold text-gray-900 dark:text-white">
               anonymous
             </p>
-            <p className="text-gray-500 text-sm">{timestamp}</p>
+            <p className="text-gray-500 text-sm">{formattedTimestamp}</p>
           </div>
         </div>
       </div>

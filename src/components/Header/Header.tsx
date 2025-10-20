@@ -1,4 +1,3 @@
-// Header.tsx
 "use client";
 import React from "react";
 
@@ -9,7 +8,15 @@ interface HeaderProps {
 
 export default function Header({ chosenOption, onOptionChange }: HeaderProps) {
   return (
-    <div className="max-w-[600px] w-[100%] flex left-[50%] translate-x-[-50%] self-start fixed rounded-2xl overflow-hidden">
+    <div
+      className="
+        max-w-[600px] w-[75%] sm:w-[95%] 
+        flex left-[50%] translate-x-[-50%] 
+        self-start fixed 
+        rounded-2xl overflow-hidden
+        top-22 md:top-5
+      "
+    >
       <button
         className="border-r-2 bg-secondary-color w-[50%] h-14 rounded-l-2xl cursor-pointer transition-colors duration-150 hover:bg-secondary-color-hovered"
         onClick={() => onOptionChange("yourUploads")}

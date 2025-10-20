@@ -2,7 +2,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-let accessToken: string | null = null;
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
@@ -11,11 +10,9 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { data, error } = await supabase.auth.signInWithPassword(loginData);
+  const { error } = await supabase.auth.signInWithPassword(loginData);
   if (error) {
     return { error };
-  } else {
-    console.log(data.session.access_token);
   }
 
   revalidatePath("/", "layout");
